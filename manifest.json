@@ -8,12 +8,12 @@
   "description": "Agenda de contactos, tareas y notas con IA.",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "agenda.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "agenda (1).png",
       "sizes": "512x512",
       "type": "image/png"
     }
