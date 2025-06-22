@@ -1,5 +1,3 @@
-alert("¡Script cargado!");
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- Selectores del Menú ---
     const sidebar = document.querySelector('.sidebar');
@@ -94,11 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
             li.className = task.completed ? 'completed' : '';
             const dateHtml = task.date ? `<span class="item-date">${task.date}</span>` : '';
             li.innerHTML = `
-                <span class="task-text">${task.text}</span>
-                ${dateHtml}
-                <div class="task-actions">
-                    <button class="complete-btn" data-index="${index}">${task.completed ? 'Deshacer' : 'Completar'}</button>
-                    <button class="delete-btn" data-index="${index}">Eliminar</button>
+                <div class="item-header">
+                    <div class="item-header-left">
+                        <span class="task-text">${task.text}</span>
+                        ${dateHtml}
+                    </div>
+                    <div class="task-actions">
+                        <button class="minimize-btn" data-index="${index}" data-type="task">📁</button>
+                        <button class="complete-btn" data-index="${index}">${task.completed ? 'Deshacer' : 'Completar'}</button>
+                        <button class="delete-btn" data-index="${index}">Eliminar</button>
+                    </div>
                 </div>
             `;
             taskList.appendChild(li);
@@ -111,12 +114,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             const dateHtml = note.date ? `<span class="item-date">${note.date}</span>` : '';
             li.innerHTML = `
-                <button class="delete-note-btn" data-index="${index}">Eliminar</button>
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <h3 class="note-title-text">${note.title}</h3>
-                    ${dateHtml}
+                <div class="item-header">
+                    <div class="item-header-left">
+                        <h3 class="note-title-text">${note.title}</h3>
+                        ${dateHtml}
+                    </div>
+                    <div class="task-actions">
+                        <button class="minimize-btn" data-index="${index}" data-type="note">📁</button>
+                        <button class="delete-note-btn" data-index="${index}">Eliminar</button>
+                    </div>
                 </div>
-                <div class="note-content">${note.content}</div>
+                <div class="item-content expanded" data-index="${index}" data-type="note">
+                    <div class="note-content">${note.content}</div>
+                </div>
             `;
             noteList.appendChild(li);
         });
@@ -154,12 +164,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const index = e.target.getAttribute('data-index');
         if (e.target.classList.contains('delete-btn')) {
             tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
         }
         if (e.target.classList.contains('complete-btn')) {
             tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks();
         }
-        saveTasks();
-        renderTasks();
+        if (e.target.classList.contains('minimize-btn')) {
+            const button = e.target;
+            const li = button.closest('li');
+            const taskText = li.querySelector('.task-text');
+            const itemDate = li.querySelector('.item-date');
+            
+            if (taskText.style.display === 'none') {
+                // Mostrar
+                taskText.style.display = 'inline';
+                if (itemDate) itemDate.style.display = 'inline';
+                button.textContent = '📁';
+            } else {
+                // Ocultar
+                taskText.style.display = 'none';
+                if (itemDate) itemDate.style.display = 'none';
+                button.textContent = '📂';
+            }
+        }
     });
 
     // --- Lógica de Notas (reescrita) ---
@@ -208,6 +238,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 notes.splice(index, 1);
                 saveNotes();
                 renderNotes();
+            }
+        }
+        if (e.target.classList.contains('minimize-btn')) {
+            const index = e.target.getAttribute('data-index');
+            const content = document.querySelector(`.item-content[data-index="${index}"][data-type="note"]`);
+            const button = e.target;
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                button.textContent = '📂';
+            } else {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                button.textContent = '📁';
             }
         }
     });

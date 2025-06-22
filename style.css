@@ -342,4 +342,48 @@ h1 {
     color: #888;
     margin-left: 15px;
     white-space: nowrap;
+}
+
+/* Estilos para botones de minimizar */
+.minimize-btn {
+    background-color: #ff9800 !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    margin-left: 5px !important;
+    font-size: 12px !important;
+}
+
+.minimize-btn:hover {
+    background-color: #f57c00 !important;
+}
+
+/* Clases para mostrar/ocultar contenido */
+.collapsed {
+    display: none !important;
+}
+
+.expanded {
+    display: block !important;
+}
+
+/* Estilos para el header de notas y tareas */
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.item-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-content {
+    transition: all 0.3s ease;
 } 
